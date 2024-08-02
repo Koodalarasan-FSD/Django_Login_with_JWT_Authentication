@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register Page</title>
+
+    <!--font awesome-->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!--css file-->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+  </head>
+  <body>
+    <img src="{% static 'images/wave.png' %}" alt="" class="wave" />
+
+    <div class="container">
+      <div class="img">
+        <img src="{% static 'images/bg.svg' %}" alt="" />
+      </div>
+
+      <div class="content">
+        <form id="register-form">
+          <img src="{% static 'images/avatar.svg' %}" alt="" />
+          <h2 class="title">Register Page</h2>
+
+          <div class="inputbox name">
+            <div class="icon">
+              <i class="fas fa-user"></i>
+            </div>
+
+            <div class="box">
+              <h5>Username</h5>
+              <input
+                type="text"
+                name="username"
+                id="username"
+                class="input"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="inputbox pass">
+            <div class="icon">
+              <i class="fas fa-lock"></i>
+            </div>
+
+            <div class="box">
+              <h5>Password</h5>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                class="input"
+                required
+              />
+            </div>
+          </div>
+
+          <a href="{% url 'login_page'  %}">Click To Login</a>
+
+          <input type="submit" value="Register" class="btn" />
+        </form>
+      </div>
+    </div>
+
+    <script src="{% static 'js/app.js' %}"></script>
+    <script>
+      document
+        .getElementById("register-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const username = document.getElementById("username").value;
+          const password = document.getElementById("password").value;
+
+          const response = await fetch("/api/user/register/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, password }),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            localStorage.setItem("access", data.access);
+            localStorage.setItem("refresh", data.refresh);
+            alert("Registration successful!");
+            // Redirect to login page or update UI as needed
+          } else {
+            alert("Registration failed!");
+          }
+        });
+    </script>
+  </body>
+</html>
